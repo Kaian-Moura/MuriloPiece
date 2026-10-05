@@ -1,0 +1,40 @@
+@startuml
+title Arquitetura implementada — predição do Bitcoin
+left to right direction
+skinparam componentStyle uml2
+
+cloud "Yahoo Finance\nBTC-USD" as yahoo
+node "Ambiente Python / Jupyter" {
+  component "Coleta com yfinance\ndados.ipynb" as coleta
+  artifact "dados/bitcoin_5_anos.csv" as csv
+  component "Notebook de treinamento\ntreinamento.ipynb" as treino
+}
+folder "Pasta modelos/ no computador" {
+  artifact "modelo.joblib" as modelo
+  artifact "metadados.json" as metadados
+}
+node "Container Docker de inferência" {
+  component "Backend Python\nFastAPI + Uvicorn" as api
+}
+component "Cliente\nTerminal com curl" as cliente
+
+yahoo --> coleta : histórico diário
+coleta --> csv : salva OHLCV
+csv --> treino : lê Date e Close
+treino --> modelo : treina e exporta
+treino --> metadados : registra ordem, versões e métricas
+modelo --> api : bind mount somente leitura\n./modelos:/app/modelos:ro
+metadados --> api : mesmo bind mount
+cliente --> api : HTTP POST /predict\nsete fechamentos em JSON
+cliente ..> api : HTTP GET /health
+api --> cliente : JSON com previsão do dia seguinte
+
+note bottom of treino
+  Treinamento executado em notebook.
+  A API carrega o modelo pronto e não treina.
+end note
+note bottom of cliente
+  Entradas do fechamento mais recente
+  ao de seis dias antes.
+end note
+@enduml

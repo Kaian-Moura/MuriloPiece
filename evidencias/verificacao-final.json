@@ -1,0 +1,484 @@
+{
+  "executado_em": "2026-10-05T16:02:16.210836-03:00",
+  "url_base": "http://127.0.0.1:8000",
+  "modelo_sha256": "8216adc42f024990ee1d06eecaeaa7c9e1a5598fccbf6cacef954fdecedbbac2",
+  "previsao_local_usd": 123584.7331338118,
+  "previsao_api_usd": 123584.73,
+  "previsao_confere_com_artefato_local": true,
+  "total_casos": 12,
+  "todos_aprovados": true,
+  "casos": [
+    {
+      "caso": "serviço e modelo carregados",
+      "caminho": "/health",
+      "entrada": null,
+      "status_http": 200,
+      "resposta": {
+        "status": "ok",
+        "modelo_carregado": true
+      }
+    },
+    {
+      "caso": "predição igual ao artefato local",
+      "caminho": "/predict",
+      "entrada": {
+        "fechamentos": [
+          123513.4765625,
+          122425.4296875,
+          122266.53125,
+          120681.2578125,
+          118648.9296875,
+          114056.0859375,
+          114400.3828125
+        ]
+      },
+      "status_http": 200,
+      "resposta": {
+        "moeda": "BTC-USD",
+        "horizonte_dias": 1,
+        "previsao_fechamento_usd": 123584.73
+      }
+    },
+    {
+      "caso": "campo ausente",
+      "caminho": "/predict",
+      "entrada": {},
+      "status_http": 422,
+      "resposta": {
+        "detail": [
+          {
+            "type": "missing",
+            "loc": [
+              "body",
+              "fechamentos"
+            ],
+            "msg": "Field required",
+            "input": {}
+          }
+        ]
+      }
+    },
+    {
+      "caso": "seis fechamentos",
+      "caminho": "/predict",
+      "entrada": {
+        "fechamentos": [
+          123513.4765625,
+          122425.4296875,
+          122266.53125,
+          120681.2578125,
+          118648.9296875,
+          114056.0859375
+        ]
+      },
+      "status_http": 422,
+      "resposta": {
+        "detail": [
+          {
+            "type": "too_short",
+            "loc": [
+              "body",
+              "fechamentos"
+            ],
+            "msg": "List should have at least 7 items after validation, not 6",
+            "input": [
+              123513.4765625,
+              122425.4296875,
+              122266.53125,
+              120681.2578125,
+              118648.9296875,
+              114056.0859375
+            ],
+            "ctx": {
+              "field_type": "List",
+              "min_length": 7,
+              "actual_length": 6
+            }
+          }
+        ]
+      }
+    },
+    {
+      "caso": "oito fechamentos",
+      "caminho": "/predict",
+      "entrada": {
+        "fechamentos": [
+          123513.4765625,
+          122425.4296875,
+          122266.53125,
+          120681.2578125,
+          118648.9296875,
+          114056.0859375,
+          114400.3828125,
+          100000
+        ]
+      },
+      "status_http": 422,
+      "resposta": {
+        "detail": [
+          {
+            "type": "too_long",
+            "loc": [
+              "body",
+              "fechamentos"
+            ],
+            "msg": "List should have at most 7 items after validation, not 8",
+            "input": [
+              123513.4765625,
+              122425.4296875,
+              122266.53125,
+              120681.2578125,
+              118648.9296875,
+              114056.0859375,
+              114400.3828125,
+              100000
+            ],
+            "ctx": {
+              "field_type": "List",
+              "max_length": 7,
+              "actual_length": 8
+            }
+          }
+        ]
+      }
+    },
+    {
+      "caso": "preço negativo",
+      "caminho": "/predict",
+      "entrada": {
+        "fechamentos": [
+          -1,
+          122425.4296875,
+          122266.53125,
+          120681.2578125,
+          118648.9296875,
+          114056.0859375,
+          114400.3828125
+        ]
+      },
+      "status_http": 422,
+      "resposta": {
+        "detail": [
+          {
+            "type": "greater_than",
+            "loc": [
+              "body",
+              "fechamentos",
+              0
+            ],
+            "msg": "Input should be greater than 0",
+            "input": -1,
+            "ctx": {
+              "gt": 0.0
+            }
+          }
+        ]
+      }
+    },
+    {
+      "caso": "preço zero",
+      "caminho": "/predict",
+      "entrada": {
+        "fechamentos": [
+          0,
+          122425.4296875,
+          122266.53125,
+          120681.2578125,
+          118648.9296875,
+          114056.0859375,
+          114400.3828125
+        ]
+      },
+      "status_http": 422,
+      "resposta": {
+        "detail": [
+          {
+            "type": "greater_than",
+            "loc": [
+              "body",
+              "fechamentos",
+              0
+            ],
+            "msg": "Input should be greater than 0",
+            "input": 0,
+            "ctx": {
+              "gt": 0.0
+            }
+          }
+        ]
+      }
+    },
+    {
+      "caso": "preço não finito",
+      "caminho": "/predict",
+      "entrada": {
+        "fechamentos": [
+          "NaN",
+          122425.4296875,
+          122266.53125,
+          120681.2578125,
+          118648.9296875,
+          114056.0859375,
+          114400.3828125
+        ]
+      },
+      "status_http": 422,
+      "resposta": {
+        "detail": [
+          {
+            "type": "finite_number",
+            "loc": [
+              "body",
+              "fechamentos",
+              0
+            ],
+            "msg": "Input should be a finite number",
+            "input": "NaN"
+          }
+        ]
+      }
+    },
+    {
+      "caso": "texto sem valor numérico",
+      "caminho": "/predict",
+      "entrada": {
+        "fechamentos": [
+          "bitcoin",
+          122425.4296875,
+          122266.53125,
+          120681.2578125,
+          118648.9296875,
+          114056.0859375,
+          114400.3828125
+        ]
+      },
+      "status_http": 422,
+      "resposta": {
+        "detail": [
+          {
+            "type": "float_parsing",
+            "loc": [
+              "body",
+              "fechamentos",
+              0
+            ],
+            "msg": "Input should be a valid number, unable to parse string as a number",
+            "input": "bitcoin"
+          }
+        ]
+      }
+    },
+    {
+      "caso": "campo extra",
+      "caminho": "/predict",
+      "entrada": {
+        "fechamentos": [
+          123513.4765625,
+          122425.4296875,
+          122266.53125,
+          120681.2578125,
+          118648.9296875,
+          114056.0859375,
+          114400.3828125
+        ],
+        "campo_desconhecido": 1
+      },
+      "status_http": 422,
+      "resposta": {
+        "detail": [
+          {
+            "type": "extra_forbidden",
+            "loc": [
+              "body",
+              "campo_desconhecido"
+            ],
+            "msg": "Extra inputs are not permitted",
+            "input": 1
+          }
+        ]
+      }
+    },
+    {
+      "caso": "documentação interativa",
+      "caminho": "/docs",
+      "entrada": null,
+      "status_http": 200,
+      "resposta": {
+        "html_recebido": true
+      }
+    },
+    {
+      "caso": "esquema OpenAPI",
+      "caminho": "/openapi.json",
+      "entrada": null,
+      "status_http": 200,
+      "resposta": {
+        "openapi": "3.1.0",
+        "info": {
+          "title": "Predição do fechamento do Bitcoin",
+          "description": "Previsão experimental do dia seguinte usando sete fechamentos conhecidos.",
+          "version": "0.1.0"
+        },
+        "paths": {
+          "/health": {
+            "get": {
+              "summary": "Health",
+              "description": "Confirma que o serviço iniciou e carregou o modelo.",
+              "operationId": "health_health_get",
+              "responses": {
+                "200": {
+                  "description": "Successful Response",
+                  "content": {
+                    "application/json": {
+                      "schema": {}
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "/predict": {
+            "post": {
+              "summary": "Predict",
+              "description": "Recebe os sete preços na mesma ordem utilizada pelo treinamento.",
+              "operationId": "predict_predict_post",
+              "requestBody": {
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/EntradaPredicao"
+                    }
+                  }
+                },
+                "required": true
+              },
+              "responses": {
+                "200": {
+                  "description": "Successful Response",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "$ref": "#/components/schemas/SaidaPredicao"
+                      }
+                    }
+                  }
+                },
+                "422": {
+                  "description": "Validation Error",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "$ref": "#/components/schemas/HTTPValidationError"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "components": {
+          "schemas": {
+            "EntradaPredicao": {
+              "properties": {
+                "fechamentos": {
+                  "items": {
+                    "type": "number",
+                    "exclusiveMinimum": 0.0
+                  },
+                  "type": "array",
+                  "maxItems": 7,
+                  "minItems": 7,
+                  "title": "Fechamentos",
+                  "description": "Sete fechamentos em USD, do mais recente ao de seis dias antes."
+                }
+              },
+              "additionalProperties": false,
+              "type": "object",
+              "required": [
+                "fechamentos"
+              ],
+              "title": "EntradaPredicao"
+            },
+            "HTTPValidationError": {
+              "properties": {
+                "detail": {
+                  "items": {
+                    "$ref": "#/components/schemas/ValidationError"
+                  },
+                  "type": "array",
+                  "title": "Detail"
+                }
+              },
+              "type": "object",
+              "title": "HTTPValidationError"
+            },
+            "SaidaPredicao": {
+              "properties": {
+                "moeda": {
+                  "type": "string",
+                  "title": "Moeda"
+                },
+                "horizonte_dias": {
+                  "type": "integer",
+                  "title": "Horizonte Dias"
+                },
+                "previsao_fechamento_usd": {
+                  "type": "number",
+                  "title": "Previsao Fechamento Usd"
+                }
+              },
+              "type": "object",
+              "required": [
+                "moeda",
+                "horizonte_dias",
+                "previsao_fechamento_usd"
+              ],
+              "title": "SaidaPredicao"
+            },
+            "ValidationError": {
+              "properties": {
+                "loc": {
+                  "items": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "integer"
+                      }
+                    ]
+                  },
+                  "type": "array",
+                  "title": "Location"
+                },
+                "msg": {
+                  "type": "string",
+                  "title": "Message"
+                },
+                "type": {
+                  "type": "string",
+                  "title": "Error Type"
+                },
+                "input": {
+                  "title": "Input"
+                },
+                "ctx": {
+                  "type": "object",
+                  "title": "Context"
+                }
+              },
+              "type": "object",
+              "required": [
+                "loc",
+                "msg",
+                "type"
+              ],
+              "title": "ValidationError"
+            }
+          }
+        }
+      }
+    }
+  ]
+}

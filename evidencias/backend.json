@@ -1,0 +1,172 @@
+{
+  "executado_em": "2026-10-05T15:25:27.553061-03:00",
+  "url_base": "http://127.0.0.1:8000",
+  "comandos_para_reproduzir": [
+    "docker compose up -d --build",
+    "docker compose ps",
+    "curl http://127.0.0.1:8000/health",
+    "curl -X POST http://127.0.0.1:8000/predict -H 'Content-Type: application/json' --data-binary @exemplos/predicao.json"
+  ],
+  "health": {
+    "status_http": 200,
+    "resposta": {
+      "status": "ok",
+      "modelo_carregado": true
+    }
+  },
+  "entrada_predicao": {
+    "fechamentos": [
+      123513.4765625,
+      122425.4296875,
+      122266.53125,
+      120681.2578125,
+      118648.9296875,
+      114056.0859375,
+      114400.3828125
+    ]
+  },
+  "predicao": {
+    "status_http": 200,
+    "resposta": {
+      "moeda": "BTC-USD",
+      "horizonte_dias": 1,
+      "previsao_fechamento_usd": 123584.73
+    }
+  },
+  "previsao_confere_com_artefato_local": true,
+  "entradas_invalidas": [
+    {
+      "caso": "campo ausente",
+      "status_http": 422,
+      "resposta": {
+        "detail": [
+          {
+            "type": "missing",
+            "loc": [
+              "body",
+              "fechamentos"
+            ],
+            "msg": "Field required",
+            "input": {}
+          }
+        ]
+      }
+    },
+    {
+      "caso": "seis fechamentos",
+      "status_http": 422,
+      "resposta": {
+        "detail": [
+          {
+            "type": "too_short",
+            "loc": [
+              "body",
+              "fechamentos"
+            ],
+            "msg": "List should have at least 7 items after validation, not 6",
+            "input": [
+              123513.4765625,
+              122425.4296875,
+              122266.53125,
+              120681.2578125,
+              118648.9296875,
+              114056.0859375
+            ],
+            "ctx": {
+              "field_type": "List",
+              "min_length": 7,
+              "actual_length": 6
+            }
+          }
+        ]
+      }
+    },
+    {
+      "caso": "oito fechamentos",
+      "status_http": 422,
+      "resposta": {
+        "detail": [
+          {
+            "type": "too_long",
+            "loc": [
+              "body",
+              "fechamentos"
+            ],
+            "msg": "List should have at most 7 items after validation, not 8",
+            "input": [
+              123513.4765625,
+              122425.4296875,
+              122266.53125,
+              120681.2578125,
+              118648.9296875,
+              114056.0859375,
+              114400.3828125,
+              100000
+            ],
+            "ctx": {
+              "field_type": "List",
+              "max_length": 7,
+              "actual_length": 8
+            }
+          }
+        ]
+      }
+    },
+    {
+      "caso": "preço negativo",
+      "status_http": 422,
+      "resposta": {
+        "detail": [
+          {
+            "type": "greater_than",
+            "loc": [
+              "body",
+              "fechamentos",
+              0
+            ],
+            "msg": "Input should be greater than 0",
+            "input": -1,
+            "ctx": {
+              "gt": 0.0
+            }
+          }
+        ]
+      }
+    },
+    {
+      "caso": "preço não finito",
+      "status_http": 422,
+      "resposta": {
+        "detail": [
+          {
+            "type": "finite_number",
+            "loc": [
+              "body",
+              "fechamentos",
+              0
+            ],
+            "msg": "Input should be a finite number",
+            "input": "NaN"
+          }
+        ]
+      }
+    }
+  ],
+  "estado_container": "healthy",
+  "volume_modelos": {
+    "tipo": "bind",
+    "origem": "./modelos",
+    "destino": "/app/modelos",
+    "somente_leitura": true
+  },
+  "versoes_container": {
+    "python": "3.14.7",
+    "pandas": "3.0.5",
+    "numpy": "2.5.2",
+    "scipy": "1.18.0",
+    "scikit-learn": "1.9.0",
+    "joblib": "1.5.3"
+  },
+  "versoes_conferem_com_treinamento": true,
+  "documentacao_api": "http://127.0.0.1:8000/docs"
+}

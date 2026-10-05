@@ -1,0 +1,20 @@
+Execução: 05/10/2026 16:35:06 (America/Sao_Paulo)
+
+docker compose ps --format "table {{.Name}}\t{{.Status}}\t{{.Ports}}"
+NAME                STATUS                    PORTS
+murilao-backend-1   Up 35 minutes (healthy)   127.0.0.1:8000->8000/tcp
+
+.venv/bin/python scripts/verificar_backend.py --saida evidencias/verificacao-capturas.json
+OK: serviço e modelo carregados — HTTP 200
+OK: predição igual ao artefato local — HTTP 200
+OK: campo ausente — HTTP 422
+OK: seis fechamentos — HTTP 422
+OK: oito fechamentos — HTTP 422
+OK: preço negativo — HTTP 422
+OK: preço zero — HTTP 422
+OK: preço não finito — HTTP 422
+OK: texto sem valor numérico — HTTP 422
+OK: campo extra — HTTP 422
+OK: documentação interativa — HTTP 200
+OK: esquema OpenAPI — HTTP 200
+12 casos aprovados. Evidência: evidencias/verificacao-capturas.json

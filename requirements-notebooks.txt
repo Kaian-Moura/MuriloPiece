@@ -1,0 +1,3 @@
+-r requirements-treinamento.txt
+yfinance==1.7.0
+ipykernel==7.3.0

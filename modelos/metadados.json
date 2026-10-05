@@ -1,0 +1,48 @@
+{
+  "modelo": "LinearRegression",
+  "moeda": "BTC-USD",
+  "fonte_csv": "dados/bitcoin_5_anos.csv",
+  "frequencia": "diaria",
+  "janela_dias": 7,
+  "horizonte_dias": 1,
+  "colunas_entrada": [
+    "fechamento_dia_0",
+    "fechamento_dia_1",
+    "fechamento_dia_2",
+    "fechamento_dia_3",
+    "fechamento_dia_4",
+    "fechamento_dia_5",
+    "fechamento_dia_6"
+  ],
+  "ordem_entradas": "do fechamento mais recente ao de seis dias antes",
+  "amostras_treino": 1455,
+  "amostras_teste": 364,
+  "periodo_alvos_treino": {
+    "inicio": "2021-10-12",
+    "fim": "2025-10-05"
+  },
+  "periodo_alvos_teste": {
+    "inicio": "2025-10-06",
+    "fim": "2026-10-04"
+  },
+  "versoes": {
+    "python": "3.14.7",
+    "pandas": "3.0.5",
+    "numpy": "2.5.2",
+    "scipy": "1.18.0",
+    "scikit-learn": "1.9.0",
+    "joblib": "1.5.3"
+  },
+  "metricas_teste": [
+    {
+      "metodo": "Regressão linear",
+      "MAE_USD": 1317.2190245471604,
+      "RMSE_USD": 1885.9080118089291
+    },
+    {
+      "metodo": "Repetir último fechamento",
+      "MAE_USD": 1303.332975618132,
+      "RMSE_USD": 1867.641692836672
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+*
+!Dockerfile
+!requirements-treinamento.txt
+!requirements-backend.txt
+!backend/
+!backend/**
+**/__pycache__/
+**/*.pyc

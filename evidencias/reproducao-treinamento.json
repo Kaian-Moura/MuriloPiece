@@ -1,0 +1,26 @@
+{
+  "executado_em": "2026-10-05T16:00:46.353369-03:00",
+  "notebook": "treinamento.ipynb",
+  "csv": "dados/bitcoin_5_anos.csv",
+  "csv_sha256": "02980c733815126fdd549d1eafdb675cf5c793cebee66ae62d72fdbd6f3591c7",
+  "execucao": "Todas as células, kernel Python do ambiente .venv, cópia do CSV em diretório temporário",
+  "python": "3.14.7",
+  "amostras_treino": 1455,
+  "amostras_teste": 364,
+  "metadados_conferem": true,
+  "predicoes_conferem": true,
+  "maior_diferenca_absoluta_usd": 0.0,
+  "metricas_teste": [
+    {
+      "metodo": "Regressão linear",
+      "MAE_USD": 1317.2190245471604,
+      "RMSE_USD": 1885.9080118089291
+    },
+    {
+      "metodo": "Repetir último fechamento",
+      "MAE_USD": 1303.332975618132,
+      "RMSE_USD": 1867.641692836672
+    }
+  ],
+  "artefatos_originais_preservados": true
+}
